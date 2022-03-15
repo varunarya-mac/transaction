@@ -1,0 +1,96 @@
+<div class="container">
+  <h2>{{title}}</h2>
+  <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="transactionDate">Date</label>
+      <input
+        [class.is-invalid]="
+          transactionForm.get('transactionDate').invalid &&
+          transactionForm.get('transactionDate').touched
+        "
+        type="datetime-local"
+        formControlName="transactionDate"
+        id="transactionDate"
+        class="form-control"
+        value="currentDate"
+        placeholder="Select transaction date"
+      />
+    </div>
+    <div class="form-group">
+      <label for="transactionTypeDropDown">Type</label>
+      <select
+        #transactionTypeDropDown
+        [class.is-invalid]="
+          transactionForm.get('transactionTypeDropDown').invalid &&
+          transactionForm.get('transactionTypeDropDown').touched
+        "
+        formControlName="transactionTypeDropDown"
+        class="form-control"
+        (change)='onOptionsSelected(transactionTypeDropDown.value)'
+      >
+        <option value="" selected>Select transaction type</option>
+        <option
+          [value]="transactionType[type]"
+          *ngFor="let type of keys(transactionType)"
+        >
+          {{ type }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="transactionSecurityName">Security</label>
+      <input
+        type="string"
+        [class.is-invalid]="
+          transactionForm.get('transactionSecurityName').invalid &&
+          transactionForm.get('transactionSecurityName').touched
+        "
+        formControlName="transactionSecurityName"
+        id="transactionSecurityName"
+        class="form-control"
+        placeholder="Enter security(traded share) name"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="transactionShareCount">Shares</label>
+      <input
+        type="number"
+        [class.is-invalid]="
+          transactionForm.get('transactionShareCount').invalid &&
+          transactionForm.get('transactionShareCount').touched
+        "
+        id="transactionShareCount"
+        formControlName="transactionShareCount"
+        class="form-control"
+        placeholder="Enter the number of total shares"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="transactionValue">Value</label>
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">&pound;</span>
+        <input
+          type="number"
+          [class.is-invalid]="
+          transactionForm.get('transactionValue').invalid &&
+          transactionForm.get('transactionValue').touched
+        "
+          id="transactionValue"
+          formControlName="transactionValue"
+          class="form-control"
+          placeholder="Enter transaction value"
+        />
+      </div>
+    </div>
+
+    <button [disabled]="transactionForm.invalid" type="submit" class="btn btn-primary">
+      {{btnTitle}}
+    </button>
+    <button *ngIf="isEdit" class="btn btn-primary" (click)="resetForm()">
+      Cancel
+    </button>
+  </form>
+</div>

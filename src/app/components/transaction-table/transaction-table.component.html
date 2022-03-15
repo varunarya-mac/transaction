@@ -1,0 +1,14 @@
+
+<div class="table-container">
+<ag-grid-angular
+style="width: 90vw;
+    height: 40vh;"
+  class="ag-theme-balham table"
+  [rowData]="rowData"
+  (cellClicked)='onCellClicked($event)'
+  [columnDefs]="columDefs"
+  [overlayNoRowsTemplate]="overlayNoRowsTemplate"
+  (gridReady)="onGridReady($event)"
+>
+</ag-grid-angular>
+</div>
