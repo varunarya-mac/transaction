@@ -32,38 +32,18 @@ class MockTransactionService {
   public createTransaction(
     transactionDetail: Transaction
   ): Observable<Transaction> {
-    if(transactionDetail)
     return of(mockTransactionObject);
-    else {
-      const errorResponse = new HttpErrorResponse({
-        error: { code: `400`, message: `request body is not correct` },
-        status: 400,
-        statusText: 'Bad Request',
-     });
-   
-     return throwError(errorResponse)
-    }
   }
 
   public updateTransaction(
     transactionDetail: Transaction
   ): Observable<Transaction> {
-    if(transactionDetail)
     return of(mockTransactionObject);
-    else {
-      const errorResponse = new HttpErrorResponse({
-        error: { code: `404`, message: `request body is not correct` },
-        status: 404,
-        statusText: 'Bad Request',
-     });
-   
-     return throwError(errorResponse)
-    }   
   }
 
   public deleteTransaction(id: number): Observable<any> {
     if(id)
-    return of();
+    return of({});
     else {
       const errorResponse = new HttpErrorResponse({
         error: { code: `400`, message: `id parameter is missing` },
@@ -112,16 +92,6 @@ describe('TransactionComponent', () => {
     expect(component.updateNewTransactionDetail).toHaveBeenCalled();
     expect(component.transactionDetailList.length).toBe(2);
   });
-
-  it('create transaction with wrong parameters: should get failed', async()  => {
-
-    spyOn(component,'updateNewTransactionDetail').and.callThrough();
-    spyOn(window, 'alert');
-    mockTransactionActionObject.transactionDetail = null;
-    component.updateNewTransactionDetail(mockTransactionActionObject);
-    expect(component.updateNewTransactionDetail).toHaveBeenCalled();
-    expect(window.alert).toHaveBeenCalled();
-  });
   
   it('update transaction', async() => {
     spyOn(component,'updateNewTransactionDetail').and.callThrough();
@@ -133,24 +103,19 @@ describe('TransactionComponent', () => {
     expect(component.updateNewTransactionDetail).toHaveBeenCalled();
   });
   
-
-  it('update transaction with wrong parameters: should get failed', () => {
-    spyOn(component,'updateNewTransactionDetail').and.callThrough();
-    spyOn(window, 'alert');
-    mockTransactionActionObject.transactionDetail = null;
-    mockTransactionActionObject.action = EActionType.edit;
-    component.updateNewTransactionDetail(mockTransactionActionObject);
-    expect(component.updateNewTransactionDetail).toHaveBeenCalled();
-    expect(window.alert).toHaveBeenCalled();
-  });
-
   it('verify alert message values', () => {
     spyOn(component,'showAlert').and.callThrough();
     spyOn(window, 'setTimeout');
-    component.showAlert(EActionType.edit);
 
-    expect(component.showAlert).toHaveBeenCalled();
+    component.showAlert(EActionType.edit);
     expect(component.alertMessage).toBe('Transaction Updated!');
+
+    component.showAlert(EActionType.create);
+    expect(component.alertMessage).toBe('Transaction Added!');
+
+    component.showAlert(EActionType.delete);
+    expect(component.showAlert).toHaveBeenCalled();
+    expect(component.alertMessage).toBe('Transaction Deleted!');
   });
 
   it('Delete transction record', async() => {
@@ -159,5 +124,7 @@ describe('TransactionComponent', () => {
     component.deleteTransaction(1234);
     fixture.detectChanges();
     expect(component.deleteTransaction).toHaveBeenCalled();
+    expect(component.transactionDetailList.length).toBe(0);
+
   });
 });

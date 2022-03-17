@@ -51,9 +51,7 @@ export class TransactionComponent implements OnInit {
 
           },
           (error: HttpErrorResponse) => {
-            // Handle error
-            // Use if conditions to check error code, this depends on your api, how it sends error messages
-
+           
             if(error.status !== 201) {
               alert('Failed to create transaction record');
             }
@@ -78,10 +76,6 @@ export class TransactionComponent implements OnInit {
 
           },
           (error: HttpErrorResponse) => {
-            // Handle error
-            // Use if conditions to check error code, this depends on your api, how it sends error messages
-
-
             if(error.status !== 200) {
               alert('Failed to update transaction record');
             }
@@ -136,9 +130,7 @@ export class TransactionComponent implements OnInit {
 
       },
       (error: HttpErrorResponse) => {
-        // Handle error
-        // Use if conditions to check error code, this depends on your api, how it sends error messages
-        if(error.status !== 204) {
+         if(error.status !== 204) {
           alert('Failed to delete transaction record');
         }
       }
