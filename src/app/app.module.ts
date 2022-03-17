@@ -6,7 +6,6 @@ import { TransactionFormComponent } from './components/transaction-form/transact
 import { TransactionTableComponent } from './components/transaction-table/transaction-table.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AgGridModule} from 'ag-grid-angular';
-import { CurrencyRendererComponent } from './components/transaction-table/currency-renderer/currency-renderer.component';
 import { TransactionComponent } from './components/transaction/transaction.component'
 import { HttpClientModule } from '@angular/common/http';
 import { AlertStyleDirective } from './shared/directive/alert-style.directive';
@@ -15,12 +14,8 @@ import { AlertStyleDirective } from './shared/directive/alert-style.directive';
   declarations: [
     AppComponent,
     TransactionFormComponent,
-    TransactionTableComponent,
-    
-    CurrencyRendererComponent,
-    
+    TransactionTableComponent,    
     TransactionComponent,
-    
     AlertStyleDirective
   ],
   imports: [
