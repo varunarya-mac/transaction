@@ -17,6 +17,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   public overlayNoRowsTemplate: string;
   public columDefs = [];
   public rowData = [];
+  public totalCashFlow = 0;
   constructor() {
     this.overlayNoRowsTemplate = `<span class="custom-ag-grid-overlay"> No Data Available </span>`;
 
@@ -98,26 +99,14 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
   ngOnChanges(change: SimpleChanges): void {
     this.createRowsData(this.list);
-  }
+    this.list.forEach(a => this.totalCashFlow += a.cashflow);
+    this.totalCashFlow = UtilityService.convertPenseIntoPound(this.totalCashFlow);
 
+  }
 
   createRowsData(listArray: Transaction[]) {
     this.rowData = [];
-    // for (let i =0; i < 2; i ++){
-    //   this.rowData.push({
-    //         date: listArray[i].date,
-    //         type: listArray[i].type,
-    //         security: listArray[i].security? listArray[i].security : 'n/a',
-    //         share: listArray[i].shares? listArray[i].shares : 'n/a',
-    //         value: listArray[i].value,
-    //         cashflow: listArray[i].cashflow,
-    //         edit: 'Edit',
-    //         delete: 'Delete',
-    //       });
-    // }
-
     for (const rowInfo of listArray) {
-      // console.log('--------------', rowInfo);
       this.rowData.push({
         date: rowInfo.date,
         type: rowInfo.type,
@@ -134,6 +123,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   onGridReady(params): void {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
+    
     // resize columns in the grid to fit the available space
     this.gridApi.sizeColumnsToFit();
     
@@ -141,7 +131,6 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   }
 
   onCellClicked(event) {
-    console.log('-------333----------', event);
     const transactionInfo = new Action();
     if(event.value === 'Delete') {
     transactionInfo.transactionDetail = this.list[event.rowIndex];
@@ -164,13 +153,12 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       return '£' + UtilityService.convertPenseIntoPound(rowObject.value);
     
   }
-// '£' + rowObject.value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 
   currencyFormatter(rowObject: ValueFormatterParams) {
     if (rowObject.value > 0) {
-      return '+£' + rowObject.value;
+      return '+£' + UtilityService.convertPenseIntoPound(rowObject.value);
     }
-    return '-£' + -rowObject.value;
+    return '-£' + (UtilityService.convertPenseIntoPound(rowObject.value) * -1 );
   }
 
   currencyStyling(rowObject: ValueFormatterParams) {
@@ -180,7 +168,12 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     return { color: 'red' };
   }
 
-  generatePinnedBottomData() {
+  /**
+   *Below code can be used calculate cashflow with table(Its advace feature of table). 
+   * (not able to complete as of now)
+   */
+
+  /*generatePinnedBottomData() {
     // generate a row-data with null values
     let result = {};
 
@@ -192,56 +185,14 @@ export class TransactionTableComponent implements OnInit, OnChanges {
 
   calculatePinnedBottomData(target: any) {
    
-    let columnsWithAggregation = ['cashflow', 'value'];
+    let columnsWithAggregation = ['cashflow'];
     columnsWithAggregation.forEach((element) => {
       this.gridApi.forEachNodeAfterFilter((rowNode: RowNode) => {
-        // console.log('-------222----------', target[element] ,rowNode.data);
         
           target[element] += rowNode.data[element];
       });
-      // console.log('-------000----------', target[element]);
-      // if (Number(target[element]) < 0) {
-      //   target[element] = -target[element];
-      //   target[element] = `-£ ${target[element]}`;
-      // } else {
-      //   target[element] = `+£ ${target[element]}`;
-      // }
+
     });
-    // console.log('------------111--------------', target);
     return target;
-  }
-  
-
-  // calculatePinnedBottomData(target: any) {
-  //   //console.log(target);
-  //   //list of columns fo aggregation
-  //   let columnsWithAggregation = ['cashflow'];
-  //   columnsWithAggregation.forEach((element) => {
-  //     // console.log('------------111--------------element', element);
-  //     this.gridApi.forEachNodeAfterFilter((rowNode: RowNode) => {
-  //       // console.log('-------222----------', rowNode.data);
-  //       if (
-  //         rowNode.data.type === ETransactionType.deposit ||
-  //         rowNode.data.type === ETransactionType.sell
-  //       ) {
-  //         target[element] += Number(rowNode.data[element]);
-  //       } else {
-  //         target[element] -= Number(rowNode.data[element]);
-  //       }
-  //     });
-
-  //     if (target[element] < 0) {
-  //       target[element] = -target[element];
-  //       target[element] =
-  //         '-£' +
-  //         target[element].toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-  //     } else {
-  //       target[element] =
-  //         '+£' +
-  //         target[element].toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-  //     }
-  //   });
-  //   // console.log('------------111--------------', target);
-  //   return target;
-  // }
+  }*/
 }

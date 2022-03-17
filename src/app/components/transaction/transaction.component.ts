@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Alert } from 'selenium-webdriver';
 import {
   ETransactionType,
   Transaction,
@@ -46,14 +47,16 @@ export class TransactionComponent implements OnInit {
                 ...this.transactionDetailList,
                 newTransactionObject,
               ];
-              console.log('------------------');
               this.showAlert(EActionType.create);
 
           },
           (error: HttpErrorResponse) => {
             // Handle error
             // Use if conditions to check error code, this depends on your api, how it sends error messages
-            console.log(error.message);
+
+            if(error.status !== 201) {
+              alert('Failed to create transaction record');
+            }
           }
         );
     } else if (transactionAction.action === EActionType.edit) {
@@ -77,7 +80,11 @@ export class TransactionComponent implements OnInit {
           (error: HttpErrorResponse) => {
             // Handle error
             // Use if conditions to check error code, this depends on your api, how it sends error messages
-            console.log(error.message);
+
+
+            if(error.status !== 200) {
+              alert('Failed to update transaction record');
+            }
           }
         );
     }
@@ -116,10 +123,8 @@ export class TransactionComponent implements OnInit {
   }
 
   deleteTransaction(id: number) {
-    
-  console.log('---------1----------', id);
-    this.transactionService.deleteTransaction(id).subscribe(
-      (res) => {
+        this.transactionService.deleteTransaction(id).subscribe(
+      () => {
         const index = this.transactionDetailList.findIndex(function (object) {
           return object.id === id;
         });
@@ -133,6 +138,9 @@ export class TransactionComponent implements OnInit {
       (error: HttpErrorResponse) => {
         // Handle error
         // Use if conditions to check error code, this depends on your api, how it sends error messages
+        if(error.status !== 204) {
+          alert('Failed to delete transaction record');
+        }
       }
     );
   }

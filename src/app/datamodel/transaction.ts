@@ -32,10 +32,6 @@ export interface ITransaction {
   shares?: number; //(the number of the shares transacted)
 }
 
-// export interface IBuySellTransaction extends ITransaction {
-//   security: string; //(the name of the traded share)
-//   shares: number; //(the number of the shares transacted)
-// }
 
 export class Transaction implements ITransaction {
   id?: number;

@@ -1,7 +1,7 @@
 
 <div class="table-container">
 <ag-grid-angular
-style="width: 90vw;
+style="width: 80vw;
     height: 40vh;"
   class="ag-theme-balham table"
   [rowData]="rowData"
@@ -11,4 +11,9 @@ style="width: 90vw;
   (gridReady)="onGridReady($event)"
 >
 </ag-grid-angular>
+<div class="footer">
+  <span>Cumulative cashflow</span>
+  <span style="float: right;">{{totalCashFlow | currency: "GBP" }}</span>
+
+</div>
 </div>
