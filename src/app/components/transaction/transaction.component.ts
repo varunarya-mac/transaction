@@ -16,7 +16,10 @@ import { TransactionService } from 'src/app/shared/services/transaction.service'
 export class TransactionComponent implements OnInit {
   public transactionDetailList: Transaction[] = [];
   public transactionFormDetails: IAction;
-  constructor(private transactionService: TransactionService) {}
+  public alertMessage: string;
+  constructor(private transactionService: TransactionService) {
+    this.alertMessage = null;
+  }
 
   ngOnInit(): void {
     this.transactionService.getTransactionList().subscribe(
@@ -43,6 +46,9 @@ export class TransactionComponent implements OnInit {
                 ...this.transactionDetailList,
                 newTransactionObject,
               ];
+              console.log('------------------');
+              this.showAlert(EActionType.create);
+
           },
           (error: HttpErrorResponse) => {
             // Handle error
@@ -62,9 +68,11 @@ export class TransactionComponent implements OnInit {
               });
               if (index !== -1) {
                 this.transactionDetailList[index] = newTransactionObject;
+                this.showAlert(EActionType.edit);
               }
             }
             this.transactionDetailList = [...this.transactionDetailList];
+
           },
           (error: HttpErrorResponse) => {
             // Handle error
@@ -83,30 +91,33 @@ export class TransactionComponent implements OnInit {
     }
   }
 
-  updateTransaction() {
-    const t = new Transaction();
-    t.cashflow = 1000;
-    t.date = 'test';
-    t.type = ETransactionType.deposit;
-    t.value = 100;
-    t.security = 'share test';
-    t.shares = 90;
-    t.id = 1234;
+  showAlert(actionType : EActionType) {
+    switch (actionType) {
+      case EActionType.create:
+        this.alertMessage = 'Transaction Added!'
+        break;
+        case EActionType.edit:
+          this.alertMessage = 'Transaction Updated!'
+          break;
+          case EActionType.delete:
+        this.alertMessage = 'Transaction Deleted!'
+        break;
+      default:
+      this.alertMessage = null;
+        break;
+    }
 
-    console.log('---------1----------');
+    if(this.alertMessage) {
+      setTimeout(()=>{
+        this.alertMessage = null;
+      }, 3000);
+    }
+
   }
 
   deleteTransaction(id: number) {
-    const t = new Transaction();
-    t.cashflow = 1000;
-    t.date = 'test';
-    t.type = ETransactionType.deposit;
-    t.value = 100;
-    t.security = 'share test';
-    t.shares = 90;
-    t.id = 1234;
-
-    console.log('---------1----------', id);
+    
+  console.log('---------1----------', id);
     this.transactionService.deleteTransaction(id).subscribe(
       (res) => {
         const index = this.transactionDetailList.findIndex(function (object) {
@@ -115,7 +126,9 @@ export class TransactionComponent implements OnInit {
         if (index !== -1) {
           this.transactionDetailList.splice(index, 1);
           this.transactionDetailList = [...this.transactionDetailList];
+          this.showAlert(EActionType.delete);
         }
+
       },
       (error: HttpErrorResponse) => {
         // Handle error

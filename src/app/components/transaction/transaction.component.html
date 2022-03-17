@@ -1,4 +1,15 @@
 <div class="container">
-    <app-transaction-table (performActionOnTransaction)="performActionOnTransaction($event)" [list]="transactionDetailList"></app-transaction-table>
-    <app-transaction-form  (newTransactionDetail)="updateNewTransactionDetail($event)" [transactionAction]="transactionFormDetails" ></app-transaction-form>
+  <app-transaction-table
+    (performActionOnTransaction)="performActionOnTransaction($event)"
+    [list]="transactionDetailList"
+  ></app-transaction-table>
+
+  <p *ngIf="alertMessage" appAlertStyle [action]="alertMessage">
+    {{ alertMessage }}
+  </p>
+
+  <app-transaction-form
+    (newTransactionDetail)="updateNewTransactionDetail($event)"
+    [transactionAction]="transactionFormDetails"
+  ></app-transaction-form>
 </div>

@@ -9,6 +9,7 @@ import { AgGridModule} from 'ag-grid-angular';
 import { CurrencyRendererComponent } from './components/transaction-table/currency-renderer/currency-renderer.component';
 import { TransactionComponent } from './components/transaction/transaction.component'
 import { HttpClientModule } from '@angular/common/http';
+import { AlertStyleDirective } from './shared/directive/alert-style.directive';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,9 @@ import { HttpClientModule } from '@angular/common/http';
     
     CurrencyRendererComponent,
     
-    TransactionComponent
+    TransactionComponent,
+    
+    AlertStyleDirective
   ],
   imports: [
     BrowserModule,
