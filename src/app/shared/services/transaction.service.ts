@@ -11,13 +11,20 @@ import { Transaction } from 'src/app/datamodel/transaction';
 })
 export class TransactionService {
   constructor(private http: HttpClient) {}
-
+/**
+ * This function get the list of Transaction records
+ * @returns Http Response
+ */
   public getTransactionList(): Observable<any> {
     return this.http.get<any>(BaseUrl + 'transactions').pipe(
       catchError(this.handleError)
     );
   }
 
+  /**
+ * This function create new transaction records
+ * @returns Http Response
+ */
   public createTransaction(
     transactionDetail: Transaction
   ): Observable<Transaction> {
@@ -33,6 +40,10 @@ export class TransactionService {
       );
   }
 
+  /**
+ * This function update Transaction record based on transactionID
+ * @returns Http Response
+ */
   public updateTransaction(
     transactionDetail: Transaction
   ): Observable<Transaction> {
@@ -47,6 +58,10 @@ export class TransactionService {
       );
   }
 
+  /**
+ * set header value for json support
+ * @returns headr object for http request
+ */
   setHeader() {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -54,6 +69,10 @@ export class TransactionService {
     return { headers: headers }
   }
 
+  /**
+ * This function delete record based on trnasaction Id.
+ * @returns Http Response
+ */
   public deleteTransaction(id: number): Observable<any> {
     return this.http.delete<any>(BaseUrl + 'transactions/' + id).pipe(
       catchError(this.handleError)

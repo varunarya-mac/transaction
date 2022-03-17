@@ -83,24 +83,24 @@ describe('TransactionComponent', () => {
   });
 
   it('create transaction', async() => {
-    spyOn(component,'updateNewTransactionDetail').and.callThrough();
+    spyOn(component,'updateTransactionRecords').and.callThrough();
     spyOn(component, 'showAlert')
     mockTransactionActionObject.action = EActionType.create;
-    component.updateNewTransactionDetail(mockTransactionActionObject);
+    component.updateTransactionRecords(mockTransactionActionObject);
     fixture.detectChanges();
     expect(component.showAlert).toHaveBeenCalled();
-    expect(component.updateNewTransactionDetail).toHaveBeenCalled();
+    expect(component.updateTransactionRecords).toHaveBeenCalled();
     expect(component.transactionDetailList.length).toBe(2);
   });
   
   it('update transaction', async() => {
-    spyOn(component,'updateNewTransactionDetail').and.callThrough();
+    spyOn(component,'updateTransactionRecords').and.callThrough();
     spyOn(component, 'showAlert')
     mockTransactionActionObject.action = EActionType.edit;
-    component.updateNewTransactionDetail(mockTransactionActionObject);
+    component.updateTransactionRecords(mockTransactionActionObject);
     fixture.detectChanges();
     expect(component.transactionDetailList.length).toBe(1);
-    expect(component.updateNewTransactionDetail).toHaveBeenCalled();
+    expect(component.updateTransactionRecords).toHaveBeenCalled();
   });
   
   it('verify alert message values', () => {

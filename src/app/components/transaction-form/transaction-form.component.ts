@@ -42,6 +42,7 @@ export class TransactionFormComponent implements OnInit, OnChanges {
   constructor() {}
 
   ngOnInit(): void {
+    // Create reactive form Object
     this.transactionForm = new FormGroup({
       transactionDate: new FormControl(
         UtilityService.getDateWithISOFormat(),
@@ -80,6 +81,10 @@ export class TransactionFormComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * This method get called when user is tring to edit fields
+   * @param transaction Transaction object containing form fields value's
+   */
   updateFormValues(transaction: Transaction) {
     this.transactionForm.setValue({
       transactionDate: transaction.date.substring(0, 16),
@@ -90,6 +95,9 @@ export class TransactionFormComponent implements OnInit, OnChanges {
     });
   }
 
+  /**
+   * This method get called on pressing Submit button on form
+   */
   onSubmit() {
     const transactionInfo = new Action();
     transactionInfo.transactionDetail = new Transaction();
@@ -110,6 +118,11 @@ export class TransactionFormComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * This method fill forms values in Transaction object
+   * @param transactionObject: empty Transaction object 
+   * @returns 
+   */
   getFormValues(transactionObject: Transaction) {
     transactionObject.cashflow = UtilityService.convertPoundsIntoPense(this.getValueBasedOnTransactionType(
       this.transactionForm.value.transactionTypeDropDown,
@@ -138,7 +151,6 @@ export class TransactionFormComponent implements OnInit, OnChanges {
     }
     return value;
   }
-
 
   onOptionsSelected(value) {
     if (

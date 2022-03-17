@@ -22,6 +22,9 @@ export class TransactionComponent implements OnInit {
     this.alertMessage = null;
   }
 
+/**
+ *Angular life cycle method 
+ */
   ngOnInit(): void {
     this.transactionService.getTransactionList().subscribe(
       (res) => {
@@ -35,7 +38,12 @@ export class TransactionComponent implements OnInit {
     );
   }
 
-  updateNewTransactionDetail(transactionAction: IAction) {
+  /** 
+   * This method works as callback from Transaction Form component
+   * and calls transaction service http method based on trancaction action (Create/Edit)
+   * @param transactionAction: Transaction Type  
+   */
+   updateTransactionRecords(transactionAction: IAction) {
     if (transactionAction.action === EActionType.create) {
       this.transactionService
         .createTransaction(transactionAction.transactionDetail)
@@ -51,7 +59,7 @@ export class TransactionComponent implements OnInit {
 
           },
           (error: HttpErrorResponse) => {
-           
+           // showing alert if status code is not 201.  
             if(error.status !== 201) {
               alert('Failed to create transaction record');
             }
@@ -76,6 +84,7 @@ export class TransactionComponent implements OnInit {
 
           },
           (error: HttpErrorResponse) => {
+            // showing alert if status code is not 200.
             if(error.status !== 200) {
               alert('Failed to update transaction record');
             }
@@ -84,6 +93,10 @@ export class TransactionComponent implements OnInit {
     }
   }
 
+  /**
+   * This method work as callback from tansaction table
+   * @param transactionAction Transaction Type (Edit/Delete)
+   */
   performActionOnTransaction(transactionAction: IAction) {
     if (transactionAction.action === EActionType.edit) {
       this.transactionFormDetails = transactionAction;
@@ -92,6 +105,11 @@ export class TransactionComponent implements OnInit {
     }
   }
 
+/**
+ * This method set message value after getting successful response from transaction API's,
+ * and show response message for 5 seconds on screen 
+ * @param actionType: Action Type (create/edit/delete)
+ */
   showAlert(actionType : EActionType) {
     switch (actionType) {
       case EActionType.create:
@@ -116,7 +134,13 @@ export class TransactionComponent implements OnInit {
 
   }
 
+/**
+ * This method calls transaction service for performing delete opration,
+ * method also show alert if transaction id is missing 
+ * @param id: Transaction id 
+ */
   deleteTransaction(id: number) {
+      if(id){
         this.transactionService.deleteTransaction(id).subscribe(
       () => {
         const index = this.transactionDetailList.findIndex(function (object) {
@@ -134,6 +158,10 @@ export class TransactionComponent implements OnInit {
           alert('Failed to delete transaction record');
         }
       }
-    );
+    );}
+    else {
+      //Show alert if TransactionId is missing
+      alert('Transaction ID is required for deletion');
+    }
   }
 }

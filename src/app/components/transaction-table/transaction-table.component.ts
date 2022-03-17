@@ -7,20 +7,23 @@ import { IAction, Transaction, EActionType, Action } from '../../datamodel/trans
   templateUrl: './transaction-table.component.html',
   styleUrls: ['./transaction-table.component.scss'],
 })
-export class TransactionTableComponent implements OnInit, OnChanges {
+export class TransactionTableComponent implements OnChanges {
   @Input() list: Transaction[];
   @Output() performActionOnTransaction = new EventEmitter<IAction>();
 
 
+  public totalCashFlow = 0;
+
+  //below properties are related to ag-grid
   private gridApi;
-  private gridColumnApi;
   public overlayNoRowsTemplate: string;
   public columDefs = [];
   public rowData = [];
-  public totalCashFlow = 0;
+
   constructor() {
     this.overlayNoRowsTemplate = `<span class="custom-ag-grid-overlay"> No Data Available </span>`;
 
+    //defining table column properties
     this.columDefs = [
       { headerName: '#', field:'sno', valueGetter: "node.rowIndex + 1" },
       { headerName: 'Date', field: 'date' },
@@ -96,7 +99,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       },
     ];
   }
-  ngOnInit(): void {}
+/**
+ * Angular life cycle method
+ */
   ngOnChanges(change: SimpleChanges): void {
     this.createRowsData(this.list);
     this.list.forEach(a => this.totalCashFlow += a.cashflow);
@@ -104,6 +109,10 @@ export class TransactionTableComponent implements OnInit, OnChanges {
 
   }
 
+  /**
+   * Mapping Transaction Object values to ag-grid column values
+   * @param listArray: Transaction list 
+   */
   createRowsData(listArray: Transaction[]) {
     this.rowData = [];
     for (const rowInfo of listArray) {
@@ -120,16 +129,21 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * This is callback from ag-grid, it got called once table is ready to use
+   * @param params 
+   */
   onGridReady(params): void {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
-    
+    this.gridApi = params.api; 
+
     // resize columns in the grid to fit the available space
     this.gridApi.sizeColumnsToFit();
-    
-    // this.gridApi.setPinnedBottomRowData([this.generatePinnedBottomData()]);
   }
 
+  /**
+   * This is callback from ag-grid, get called whenever click on row
+   * @param event: Table cell object 
+   */
   onCellClicked(event) {
     const transactionInfo = new Action();
     if(event.value === 'Delete') {
@@ -145,15 +159,33 @@ export class TransactionTableComponent implements OnInit, OnChanges {
 
   }
 
+  /**
+   * This is callback from ag-grid, this help to set format of column values
+   * using this method to set format for Edit and Delete Column 
+   * @param rowObject
+   * @returns html tags as string
+   */
   actionFormatter(rowObject: ValueFormatterParams) {
     return `<a href="#" onclick="return false;">${rowObject.value}</a>`;
   }
 
+  /**
+   * This is callback from ag-grid, this help to set format of column values
+   * using this method to set format for Value Column 
+   * @param rowObject
+   * @returns formatted value as string
+   */
   valueFormatter(rowObject: ValueFormatterParams) {
       return '£' + UtilityService.convertPenseIntoPound(rowObject.value);
     
   }
 
+  /**
+   * This is callback from ag-grid, this help to set format of column values
+   * using this method to set format for Currency Column 
+   * @param rowObject
+   * @returns formatted value as string
+   */
   currencyFormatter(rowObject: ValueFormatterParams) {
     if (rowObject.value > 0) {
       return '+£' + UtilityService.convertPenseIntoPound(rowObject.value);
@@ -161,6 +193,12 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     return '-£' + (UtilityService.convertPenseIntoPound(rowObject.value) * -1 );
   }
 
+  /**
+   * This is callback from ag-grid, this help to set CSS styling
+   * using this method to set styling for Currency Column 
+   * @param rowObject
+   * @returns Css styling Object
+   */
   currencyStyling(rowObject: ValueFormatterParams) {
     if (rowObject.value > 0) {
       return { color: 'green' };
